@@ -3,16 +3,20 @@
 #include <iostream>
 using namespace base;
 Node::Node():
-  result_(0),
-  parent_(NULL),
   locked_(false),
-  cStatus_(ROOT)
+  cStatus_(ROOT),
+  firstValue_(0),
+  secondValue_(0),
+  result_(0),
+  parent_(NULL)
   {}
 Node::Node(Node * myParent):
-  parent_(myParent),
-  result_(0),
   locked_(false),
-  cStatus_(IDLE)
+  cStatus_(IDLE),
+  firstValue_(0),
+  secondValue_(0),
+  result_(0),
+  parent_(myParent)
   {}
 Node * Node::getParent(){
   return this->parent_;
@@ -22,9 +26,7 @@ bool Node::pre_combine(){
   //std::cout << "pre-combine" << std::endl;
   int count  = 0;
   while(this->locked_) {
-    std::cout << "wait on pre_combine count = "<<count << std::endl;
     cond_var_.wait(&node_lock_);
-    std::cout << "wake up in pre_combine" << std::endl;
   }
   switch(this->cStatus_){
     case IDLE:
@@ -47,9 +49,7 @@ int Node::combine(int combined){
   ScopedLock l(&node_lock_);
   //std::cout << "combine" << std::endl;
   while(this->locked_){
-    std::cout << "wait on combine" << std::endl;
     cond_var_.wait(&node_lock_);
-    std::cout << "wake up in combine" << std::endl;
   }
   __sync_fetch_and_or(&this->locked_, true);
   this->firstValue_  = combined;
@@ -81,9 +81,9 @@ int Node::op(int combined){
       //this->locked_         = false;
       cond_var_.signalAll();
       while (this->cStatus_ != RESULT){
-        std::cout << "wait on op" << std::endl;
+        //std::cout << "wait on op" << std::endl;
         cond_var_.wait(&node_lock_);
-        std::cout << "wake on op" << std::endl;
+        //std::cout << "wake on op" << std::endl;
       }
       // locked_               = false;
       // same operation like before

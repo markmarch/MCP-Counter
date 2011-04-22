@@ -4,8 +4,7 @@ using namespace base;
 /*
 the tree should be complete binary tree
 */
-Combining_Tree::Combining_Tree(int size, int thread_num):
-  thread_num_(thread_num),
+Combining_Tree::Combining_Tree(int size):
   tree_size_(size)
 { 
   int leaf_num       =  (this->tree_size_ + 1) / 2;             // leaf num in the node 
@@ -35,6 +34,7 @@ Combining_Tree::~Combining_Tree(){
 int Combining_Tree::getResult(){
   return nodes_[0]->result_;
 }
+
 int Combining_Tree::getAndIncrement(int thread_id){
   std::vector <Node*> nodes_stack;
   Node * myLeaf      = this->leaf_[thread_id / 2];
