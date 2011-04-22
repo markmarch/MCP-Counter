@@ -18,7 +18,7 @@ Node * Node::getParent(){
   return this->parent_;
 }
 bool Node::pre_combine(){
-  ScopedLock l(&pre_combine_lock_);
+  ScopedLock l(&node_lock_);
   //std::cout << "pre-combine" << std::endl;
   int count  = 0;
   while(this->locked_) {
@@ -44,7 +44,7 @@ bool Node::pre_combine(){
 }
 
 int Node::combine(int combined){
-  ScopedLock l(&combine_lock_);
+  ScopedLock l(&node_lock_);
   //std::cout << "combine" << std::endl;
   while(this->locked_){
     std::cout << "wait on combine" << std::endl;
@@ -66,7 +66,7 @@ int Node::combine(int combined){
 }
 
 int Node::op(int combined){
-  ScopedLock l(&op_lock_);
+  ScopedLock l(&node_lock_);
   
   int oldValue;
   switch (this->cStatus_) {
@@ -99,7 +99,7 @@ int Node::op(int combined){
 }
 
 void Node::distribute(int prior){
-  ScopedLock l(&distribute_lock_);
+  ScopedLock l(&node_lock_);
   
   switch (this->cStatus_) {
     case FIRST:

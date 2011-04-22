@@ -27,10 +27,7 @@ private:
   Node*        parent_;              // pointer to parent
   ConditionVar cond_var_;            // cond_var for node_lock
   Mutex        node_lock_;           // lock on the the node
-  Mutex        pre_combine_lock_;    // lock the pre_combine method
-  Mutex        combine_lock_;        // lock the combine method
-  Mutex        op_lock_;             // lock the op method
-  Mutex        distribute_lock_;     // lock the distribute method  
+  
   // methods
   bool     pre_combine();
   int      combine(int combined);
