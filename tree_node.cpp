@@ -9,7 +9,9 @@ Node::Node():
   secondValue_(0),
   result_(0),
   parent_(NULL)
-  {}
+  {
+    //padding_ = new char [pad_size];
+  }
 Node::Node(Node * myParent):
   locked_(false),
   cStatus_(IDLE),
@@ -17,14 +19,16 @@ Node::Node(Node * myParent):
   secondValue_(0),
   result_(0),
   parent_(myParent)
-  {}
+  {
+    //padding_ = new char [pad_size];
+  }
 Node * Node::getParent(){
   return this->parent_;
 }
 bool Node::pre_combine(){
   ScopedLock l(&node_lock_);
   //std::cout << "pre-combine" << std::endl;
-  int count  = 0;
+  //int count  = 0;
   while(this->locked_) {
     cond_var_.wait(&node_lock_);
   }
@@ -33,8 +37,8 @@ bool Node::pre_combine(){
       cStatus_ = FIRST;
       return true;
     case FIRST:
-      __sync_fetch_and_or(&this->locked_, true);
-      //locked = true;
+      //__sync_fetch_and_or(&this->locked_, true);
+      locked_  = true;
       cStatus_ = SECOND;
       return false;
     case ROOT:
@@ -51,9 +55,10 @@ int Node::combine(int combined){
   while(this->locked_){
     cond_var_.wait(&node_lock_);
   }
-  __sync_fetch_and_or(&this->locked_, true);
+  
+  //__sync_fetch_and_or(&this->locked_, true);
   this->firstValue_  = combined;
-  //this->locked_  = true;
+  this->locked_  = true;
   switch(this->cStatus_){
     case FIRST:
       return  this->firstValue_;
@@ -77,17 +82,17 @@ int Node::op(int combined){
     case SECOND:
       this->secondValue_    = combined;
       // is there really need to be atomic operation?
-      __sync_fetch_and_and(&this->locked_, false);
-      //this->locked_         = false;
+      //__sync_fetch_and_and(&this->locked_, false);
+      this->locked_         = false;
       cond_var_.signalAll();
       while (this->cStatus_ != RESULT){
         //std::cout << "wait on op" << std::endl;
         cond_var_.wait(&node_lock_);
         //std::cout << "wake on op" << std::endl;
       }
-      // locked_               = false;
+      locked_               = false;
       // same operation like before
-      __sync_fetch_and_and(&this->locked_, false);
+      //__sync_fetch_and_and(&this->locked_, false);
      
       cond_var_.signalAll();
       this->cStatus_        = IDLE;
@@ -105,8 +110,8 @@ void Node::distribute(int prior){
     case FIRST:
       this->cStatus_        = IDLE;
       // 
-      __sync_fetch_and_and(&this->locked_, false);
-      //this->locked_         = false;
+      //__sync_fetch_and_and(&this->locked_, false);
+      this->locked_         = false;
       break;
     case SECOND:
       this->result_         = prior + this->firstValue_;

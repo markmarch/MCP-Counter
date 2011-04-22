@@ -3,6 +3,7 @@
 
 #include "tree_node.hpp"
 namespace base{
+
 class Combining_Tree{
 public:
   Combining_Tree(int size);
@@ -11,6 +12,7 @@ public:
   ~Combining_Tree();
 private:
   int      tree_size_;          // record the tree size
+  
   Node **  leaf_;               // the pointer point to the leaf nodes 
   Node **  nodes_;              // the pointer point to the root node
   Combining_Tree(Combining_Tree&);
