@@ -19,7 +19,9 @@ public:
   Node*        getParent();          // get the parent node of this node 
 private:
 
-  static const int pad_size = 128 - ( sizeof(bool) + sizeof(CStatus) + sizeof(int)*3 + sizeof(Node*) + sizeof(ConditionVar) + sizeof(Mutex)); 
+  /*static const int pad_size = 128 - ( sizeof(bool) + sizeof(CStatus) + sizeof(int)*3 + sizeof(Node*) + sizeof(ConditionVar) + sizeof(Mutex)); 
+   */
+
   bool         locked_;              // locked status on this node
   enum         CStatus  cStatus_;    // combining status
   int          firstValue_;          // 1st value to combine
@@ -28,7 +30,7 @@ private:
   Node*        parent_;              // pointer to parent
   ConditionVar cond_var_;            // cond_var for node_lock
   Mutex        node_lock_;           // lock on the the node
-  char         padding_[pad_size] ;
+  char         padding_[32] ;
   // methods
   bool     pre_combine();
   int      combine(int combined);
