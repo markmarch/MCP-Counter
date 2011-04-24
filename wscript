@@ -63,6 +63,7 @@ def build(bld):
                                      tree_node.cpp
                                      combining_tree.cpp
                                      thread.cpp
+                                     stat_counter.cpp
                                       """
                                       ,
                        include      = '.. .',
@@ -83,6 +84,14 @@ def build(bld):
                       unit_test     = 1
                     )
 
+    bld.new_task_gen( features      = 'cxx cprogram',
+                      source        = 'stat_counter_test.cpp', 
+                      includes      = '.. .',
+                      uselib        = '',
+                      uselib_local  = 'stat_counter',
+                      target        = 'stat_counter_counter_test',
+                      unit_test     = 1
+                    )
     #
     # Build debug variant, if --debug was set
     #

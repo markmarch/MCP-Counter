@@ -19,7 +19,7 @@ public:
 	Stat_Counter(int max_thread_num);       // use defined max thread_num
 	Stat_Counter();                         // give the default max thread_num is 16
 private:
-	__thread int counter_;                  // count for each thread
+	static __thread int counter_;           // count for each thread
 	int 				 max_thread_num_;           // max connected thread
 	int **       counter_p_;                // pointer point to all thread counter
 	int          final_count_;              // the sum for this counter
