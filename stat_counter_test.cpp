@@ -30,11 +30,6 @@ protected:
 	pthread_t         tid_;
 };
 
-class StatTester_1 : public StatTester{
-public: 
-	void test(int repeat_time);           // overwrite the pure vitural function in Stat_Test
-};
-
 class StatTestHelper{
 public:
 	void runner(Stat_Counter * stat_counter,
@@ -80,6 +75,10 @@ void StatTester::join(){
 	pthread_join(tid_, NULL);
 }
 
+class StatTester_1 : public StatTester{
+public: 
+	void test(int repeat_time);           // overwrite the pure vitural function in Stat_Test
+};
 
 void StatTester_1::test(int repeat_time){
 	stat_counter.count_register_thread();
@@ -94,6 +93,19 @@ TEST(Basics, Sequential){
 	Stat_Counter stat_counter;
 	StatTestHelper::getInstance().runner(&stat_counter,1,REPEAT_TIME);
 	EXPECT_EQ(stat_counter.read_count(),REPEAT_TIME);
+}
+
+TEST(Basics, Concurency2Thread){
+	Stat_Counter stat_counter;
+	StatTestHelper::getInstance().runner(&stat_counter,2,REPEAT_TIME);
+	EXPECT_EQ(stat_counter.read_count(),REPEAT_TIME*2);
+}
+
+
+TEST(Basics, Concurency4Thread){
+	Stat_Counter stat_counter;
+	StatTestHelper::getInstance().runner(&stat_counter,4,REPEAT_TIME);
+	EXPECT_EQ(stat_counter.read_count(),REPEAT_TIME*4);
 }
 
 } // end of non named namespace
