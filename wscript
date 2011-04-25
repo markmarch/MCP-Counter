@@ -64,6 +64,7 @@ def build(bld):
                                      combining_tree.cpp
                                      thread.cpp
                                      stat_counter.cpp
+                                     ticks_clock.cpp
                                       """
                                       ,
                        include      = '.. .',
@@ -88,7 +89,7 @@ def build(bld):
                       source        = 'stat_counter_test.cpp', 
                       includes      = '.. .',
                       uselib        = '',
-                      uselib_local  = 'stat_counter',
+                      uselib_local  = 'combine',
                       target        = 'stat_counter_counter_test',
                       unit_test     = 1
                     )

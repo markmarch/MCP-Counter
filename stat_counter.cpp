@@ -12,6 +12,7 @@ Stat_Counter::Stat_Counter():
 	counter_p_ = new int* [max_thread_num_]; 
 	for(int i = 0; i < max_thread_num_; i++){
 		index_free_.push_back(i);
+    counter_p_[i] = NULL;
 	}
 }
 Stat_Counter::Stat_Counter(int max_thread_num):
@@ -21,7 +22,11 @@ Stat_Counter::Stat_Counter(int max_thread_num):
 	counter_p_ = new int* [max_thread_num_];
 	for(int i = 0; i < max_thread_num_; i++){
 		index_free_.push_back(i);
-	}
+	  counter_p_[i] = NULL;
+  }
+}
+Stat_Counter::~Stat_Counter(){
+  delete []counter_p_;
 }
 void Stat_Counter::inc_count(){
 	counter_++;
