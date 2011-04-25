@@ -27,6 +27,8 @@ void Stat_Counter::inc_count(){
 	counter_++;
 }
 
+__thread int Stat_Counter::counter_;
+
 int Stat_Counter::read_count(){
 	int sum;
 	this->spinlock_.lock();
@@ -52,7 +54,8 @@ bool Stat_Counter::count_register_thread(){
 	// do the register
 	pid_map_index_[pthread_self()] = index_free_.back();
 	counter_p_[index_free_.back()] = &counter_;
-	index_free_.pop_back();
+	counter_ = 0;
+  index_free_.pop_back();
 	this->spinlock_.unlock();
 	return true;
 }
