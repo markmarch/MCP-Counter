@@ -32,7 +32,8 @@ protected:
 
 class StatTester_1 : public StatTester{
 public: 
-	void test(int repeat_time);           // overwrite the pure vitural function in Stat_Test
+	StatTester_1(Stat_Counter * stat_counter):StatTester(stat_counter){}
+  void test(int repeat_time);           // overwrite the pure vitural function in Stat_Test
 };
 
 
@@ -58,10 +59,10 @@ void StatTestHelper::runner(Stat_Counter * stat_counter,
 {
 	StatTester_1  ** statTester  = new StatTester_1* [thread_num];
 	for(int i = 0; i < thread_num; i++){
-		statTester[i] = new statTester(stat_counter);
+		statTester[i] = new StatTester_1(stat_counter);
 	}
 	for(int i = 0; i < thread_num; i++){
-		statTester[i]->start();
+		statTester[i]->start(repeat_time);
 	}
 	for(int i = 0; i < thread_num; i++){
 		statTester[i]->join();
@@ -82,11 +83,11 @@ void StatTester::join(){
 }
 
 void StatTester_1::test(int repeat_time){
-	stat_counter.count_register_thread();
+	stat_counter->count_register_thread();
 	for(int i = 0 ; i < repeat_time; i++){
-		stat_counter.inc_count();
+		stat_counter->inc_count();
 	}
-	stat_counter.unregister_thread();
+	stat_counter->count_unregister_thread();
 } 
 
 // all the tests 
