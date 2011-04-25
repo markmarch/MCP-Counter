@@ -30,6 +30,12 @@ protected:
 	pthread_t         tid_;
 };
 
+class StatTester_1 : public StatTester{
+public: 
+	void test(int repeat_time);           // overwrite the pure vitural function in Stat_Test
+};
+
+
 class StatTestHelper{
 public:
 	void runner(Stat_Counter * stat_counter,
@@ -74,11 +80,6 @@ void StatTester::start(int repeat_time){
 void StatTester::join(){
 	pthread_join(tid_, NULL);
 }
-
-class StatTester_1 : public StatTester{
-public: 
-	void test(int repeat_time);           // overwrite the pure vitural function in Stat_Test
-};
 
 void StatTester_1::test(int repeat_time){
 	stat_counter.count_register_thread();
