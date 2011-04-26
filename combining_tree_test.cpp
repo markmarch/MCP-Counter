@@ -127,12 +127,15 @@ public:
               int               thread_num,
               int               repeat_time
               );
+<<<<<<< HEAD
   void runner4(Combining_Tree * tree,
               int               tree_size,
               int               thread_num,
               int               repeat_time
               );
 
+=======
+>>>>>>> 6173a2d3f9c0b06c6d523635c2b94ac083fec69d
   static TreeTestHelper& getInstance(){
     static TreeTestHelper instance;
     return instance;
@@ -221,7 +224,10 @@ void TreeTestHelper::runner2(Combining_Tree * tree,
   delete [] testCombo;
   delete [] treeTester;
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6173a2d3f9c0b06c6d523635c2b94ac083fec69d
 /******** single thread read multiple thread update running case *********/
 void TreeTestHelper::runner3(Combining_Tree * tree, 
                             int              tree_size, 
@@ -237,6 +243,10 @@ void TreeTestHelper::runner3(Combining_Tree * tree,
     testCombo[i]  = new TestCombo(i, repeat_time);
   }
   for(int i = 0 ; i < thread_num ; i++){
+<<<<<<< HEAD
+=======
+//    std::cout << "thread now is: " << i << std::endl;
+>>>>>>> 6173a2d3f9c0b06c6d523635c2b94ac083fec69d
     if(i == thread_num - 1)  // let last thread do the read
       treeTester[i]->start3(testCombo[i]);  // read
     else
@@ -256,6 +266,7 @@ void TreeTestHelper::runner3(Combining_Tree * tree,
 //      update_sum += temp_update_avg;
       update_sum += testCombo[i]->update_total;
     }
+<<<<<<< HEAD
   }
   // Total update
 //  double update_avg = (update_sum / (thread_num - 1)) * 1e9;
@@ -315,6 +326,14 @@ void TreeTestHelper::runner4(Combining_Tree * tree,
   double update_avg = (update_sum / (repeat_time*(thread_num/2))) * 1e9;
   // Total read
   double read_avg = (read_sum / (repeat_time*(thread_num/2))) * 1e9;
+=======
+  }
+  // Total update
+//  double update_avg = (update_sum / (thread_num - 1)) * 1e9;
+    double update_avg = (update_sum / (repeat_time*(thread_num-1))) * 1e9;
+  // Total read
+  double read_avg = (read_sum / repeat_time) * 1e9;
+>>>>>>> 6173a2d3f9c0b06c6d523635c2b94ac083fec69d
   std::cout << "thread count is: " << thread_num << std::endl;
   std::cout << "average update time: " << update_avg << "ns" << std::endl;
   std::cout << "average read time: " << read_avg << "ns" << std::endl;
@@ -325,7 +344,6 @@ void TreeTestHelper::runner4(Combining_Tree * tree,
   delete [] testCombo;
   delete [] treeTester;
 }
-
 /************************ basic tests ***********************/
 
 TEST(Basics, Sequential){
@@ -354,6 +372,7 @@ TEST(Basics, Concurrency16) {
   TreeTestHelper::getInstance().runner(&tree,16,16,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*16);
 }
+<<<<<<< HEAD
 
 TEST(Basics, Concurrency32){
   Combining_Tree tree(32);
@@ -366,6 +385,20 @@ TEST(Basics, Concurrency64){
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*64);
 }
 
+=======
+
+TEST(Basics, Concurrency32){
+  Combining_Tree tree(32);
+  TreeTestHelper::getInstance().runner(&tree,32,32,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*32);
+}
+TEST(Basics, Concurrency64){
+  Combining_Tree tree(64);
+  TreeTestHelper::getInstance().runner(&tree,64,64,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*64);
+}
+
+>>>>>>> 6173a2d3f9c0b06c6d523635c2b94ac083fec69d
 TEST(Basics, Concurrency128){
   Combining_Tree tree(128);
   TreeTestHelper::getInstance().runner(&tree,128,128,REPEAT_TIME);
@@ -452,7 +485,10 @@ TEST(TimeInterval, ConcurrencySevenNodeEightThread){
 }
 */
 /**************** Tests with one read thread ********************/
+<<<<<<< HEAD
 /*
+=======
+>>>>>>> 6173a2d3f9c0b06c6d523635c2b94ac083fec69d
 TEST(SingleRead, Sequential) {
   Combining_Tree tree(1);
   TreeTestHelper::getInstance().runner3(&tree,1,2,REPEAT_TIME);
@@ -493,6 +529,7 @@ TEST(SingleRead, Concurrency128){
   TreeTestHelper::getInstance().runner3(&tree,128,129,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*128);
 }
+<<<<<<< HEAD
 */
 /*********** multiple read multiple updates *********************/ 
 TEST(MultipleRead, Sequential) {
@@ -537,6 +574,8 @@ TEST(SingleRead, Concurrent128) {
 }
 
 
+=======
+>>>>>>> 6173a2d3f9c0b06c6d523635c2b94ac083fec69d
 
 } // unnamed namespace
 int main(int argc, char *argv[]) {
