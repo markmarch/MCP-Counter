@@ -25,7 +25,7 @@ class TicksClock {
 public:
   typedef uint64_t Ticks;
 
-  static double ticksPerMicroSecond();
+  static double ticksPerSecond();
 
   static Ticks getTicks() {
 #if defined(__i386__) || defined(__x86_64__)
