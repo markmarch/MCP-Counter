@@ -20,7 +20,7 @@ const int MEGA_REPEAT_TIME = 10000000;
 static double getTotal(TicksClock::Ticks start, 
     TicksClock::Ticks end) {
   double duration = end - start;
-  double time = duration / TicksClock::ticksPerMicroSecond();
+  double time = duration / TicksClock::ticksPerSecond();
   return time;
 }
 
@@ -43,9 +43,11 @@ public:
   ~TreeTester_1(){};
   void start1(TestCombo * tc_p);
   void start2(TestCombo * tc_p);
-  void join();
+  void start3(TestCombo * tc_p);
   void test1(TestCombo * tc_p);
   void test2(TestCombo * tc_p);
+  void test3(TestCombo * tc_p);
+  void join();
 
 private:
   Combining_Tree * tree_;
@@ -53,54 +55,38 @@ private:
   struct timespec interval_;  //time interval
 };
 
-class TreeTestHelper{
-public:
-  void runner(Combining_Tree * tree,
-              int              tree_size, 
-              int              thread_num,
-              int              repeat_time
-             );
-  void runner2(Combining_Tree * tree,
-              int              tree_size, 
-              int              thread_num,
-              int              repeat_time
-             );
-  static TreeTestHelper& getInstance(){
-    static TreeTestHelper instance;
-    return instance;
-  }
-private:
-  TreeTestHelper(){}
-  TreeTestHelper(TreeTestHelper &);
-  TreeTestHelper& operator=(TreeTestHelper&);
-};
 TreeTester_1::TreeTester_1(Combining_Tree * tree)
   : tree_(tree){
     this->interval_ = {0, 1000};  // 1 microsecond interval
   }
-
+// Normal test
 void TreeTester_1::start1(TestCombo * tc_p){
   tid_ = makeThread(std::tr1::bind(&TreeTester_1::test1, this, tc_p));
 }
-
+// Test with time interval
 void TreeTester_1::start2(TestCombo * tc_p){
   tid_ = makeThread(std::tr1::bind(&TreeTester_1::test2, this, tc_p));
 }
-
+// Test with read operation
+void TreeTester_1::start3(TestCombo * tc_p){
+  tid_ = makeThread(std::tr1::bind(&TreeTester_1::test3, this, tc_p));
+}
 
 void TreeTester_1::join(){
   pthread_join(tid_, NULL);
 }
-
-void TreeTester_1::test1(TestCombo * tc_p){ 
+// normal update test
+void TreeTester_1::test1(TestCombo * tc_p){
   TicksClock::Ticks start = TicksClock::getTicks();
   for(int i = 0 ; i < tc_p->repeat_time; i++){
     tree_->getAndIncrement(tc_p->thread_id);
   }
   TicksClock::Ticks end = TicksClock::getTicks();
-  tc_p->update_total =  getTotal(start, end);
+  tc_p->update_total = getTotal(start, end);
+//  std::cout << "update operation duration: " << tc_p->update_total << std::endl;
 }
 
+// update with time interval
 void TreeTester_1::test2(TestCombo * tc_p){
   TicksClock::Ticks start = TicksClock::getTicks();
   for(int i = 0 ; i < tc_p->repeat_time; i++){
@@ -112,6 +98,46 @@ void TreeTester_1::test2(TestCombo * tc_p){
   tc_p->update_total = getTotal(start, end);
 }
 
+// read operation
+void TreeTester_1::test3(TestCombo * tc_p){
+  TicksClock::Ticks start = TicksClock::getTicks();
+  for(int i = 0 ; i < tc_p->repeat_time; i++){
+    tree_->getResult();
+  }
+  TicksClock::Ticks end = TicksClock::getTicks();
+  tc_p->read_total = getTotal(start, end);
+  std::cout << "read operation duration: " << tc_p->read_total << std::endl;
+}
+
+
+class TreeTestHelper{
+public:
+  void runner(Combining_Tree * tree,
+              int              tree_size, 
+              int              thread_num,
+              int              repeat_time
+             );
+  void runner2(Combining_Tree * tree,
+              int               tree_size, 
+              int               thread_num,
+              int               repeat_time
+             );
+  void runner3(Combining_Tree * tree,
+              int               tree_size,
+              int               thread_num,
+              int               repeat_time
+              );
+  static TreeTestHelper& getInstance(){
+    static TreeTestHelper instance;
+    return instance;
+  }
+private:
+  TreeTestHelper(){}
+  TreeTestHelper(TreeTestHelper &);
+  TreeTestHelper& operator=(TreeTestHelper&);
+};
+
+/***************** basic running case ***********************/
 void TreeTestHelper::runner(Combining_Tree * tree, 
                             int              tree_size, 
                             int              thread_num, 
@@ -132,13 +158,18 @@ void TreeTestHelper::runner(Combining_Tree * tree,
   }
   // Collect time
   for(int i = 0; i < thread_num; i++) {
-//    std::cout << "current update is: " << testCombo[i]->update_total << std::endl;
-    update_sum += testCombo[i]->update_total;
+    // get average update time for each thread
+      std::cout << "time per thread: " << testCombo[i]->update_total << std::endl;
+//    double temp_avg = testCombo[i]->update_total / repeat_time;
+//    std::cout << "average for this thread is: " << temp_avg << std::endl;
+//    update_sum += temp_avg;
+      update_sum += testCombo[i]->update_total;
   }
-  std::cout << "total update in 1 is: " << update_sum << std::endl;
   // calculate average time
-  double update_avg = (update_sum / (repeat_time * thread_num)) * 1e3;
-  std::cout << "thread number is: " << thread_num << std::endl;
+  std::cout << "update sum is: " << update_sum << std::endl;
+//  double update_avg = (update_sum / thread_num) * 1e9;
+  double update_avg = (update_sum / (thread_num * repeat_time)) * 1e9;
+  std::cout << "thread count is: " << thread_num << std::endl;
   std::cout << "average update time: " << update_avg << "ns" << std::endl;
   for(int i = 0; i < thread_num; i++) {
     delete treeTester[i];
@@ -148,6 +179,7 @@ void TreeTestHelper::runner(Combining_Tree * tree,
   delete [] treeTester;
 }
 
+/**************** time interval running case ***************************/
 void TreeTestHelper::runner2(Combining_Tree * tree, 
                             int              tree_size, 
                             int              thread_num, 
@@ -167,13 +199,12 @@ void TreeTestHelper::runner2(Combining_Tree * tree,
     treeTester[i]->join();
   }
   for(int i = 0; i < thread_num; i++) {
-    update_sum += testCombo[i]->update_total;
+    // will exclude sleep time
+    double temp_avg = (testCombo[i]->update_total - repeat_time * 1e-6) / repeat_time;
+    update_sum += temp_avg;
   }
-  // will exclude sleep time
-  std::cout << "total update is: " << update_sum << std::endl;
-  // Total update
-  double update_avg = ((update_sum - thread_num) / (repeat_time * thread_num)) * 1e3;
-  std::cout << "thread number is: " << thread_num << std::endl;
+  double update_avg = (update_sum / thread_num) * 1e9;
+  std::cout << "thread count is: " << thread_num << std::endl;
   std::cout << "average update time: " << update_avg << "ns" << std::endl;
   for(int i = 0; i < thread_num; i++) {
     delete treeTester[i];
@@ -182,49 +213,101 @@ void TreeTestHelper::runner2(Combining_Tree * tree,
   delete [] testCombo;
   delete [] treeTester;
 }
-
+/******** single thread read multiple thread update running case *********/
+void TreeTestHelper::runner3(Combining_Tree * tree, 
+                            int              tree_size, 
+                            int              thread_num, 
+                            int              repeat_time)
+{
+  TreeTester_1 ** treeTester = new TreeTester_1* [thread_num];
+  TestCombo    ** testCombo  = new TestCombo* [thread_num]; 
+  double update_sum = 0;  // total update time
+  double read_sum = 0;    // total read time
+  for(int i = 0 ; i < thread_num ; i++){
+    treeTester[i] = new TreeTester_1(tree);
+    testCombo[i]  = new TestCombo(i, repeat_time);
+  }
+  for(int i = 0 ; i < thread_num ; i++){
+    if(i == thread_num / 2)  // let thread_num/2 do the read
+      treeTester[i]->start3(testCombo[i]);  // read
+    else
+      treeTester[i]->start1(testCombo[i]);  // normal update
+  }
+  for(int i = 0 ; i < thread_num ; i++){
+    treeTester[i]->join();
+  }
+  for(int i = 0; i < thread_num; i++) {
+    if(i == thread_num / 2) {
+      double temp_read_avg = testCombo[i]->read_total / repeat_time;
+      read_sum += temp_read_avg;
+    }
+    else {
+      double temp_update_avg = testCombo[i]->update_total / repeat_time;
+      update_sum += temp_update_avg;
+    }
+  }
+  // Total update
+  double update_avg = (update_sum / (thread_num - 1)) * 1e9;
+  // Total read
+  double read_avg = (read_sum / repeat_time) * 1e9;
+  std::cout << "thread count is: " << thread_num << std::endl;
+  std::cout << "average update time: " << update_avg << "ns" << std::endl;
+  std::cout << "average read time: " << read_avg << "ns" << std::endl;
+  for(int i = 0; i < thread_num; i++) {
+    delete treeTester[i];
+    delete testCombo[i];
+  }
+  delete [] testCombo;
+  delete [] treeTester;
+}
 /************************ basic tests ***********************/
 
-TEST(Basics, SequentialOneNode){
+TEST(Basics, Sequential){
   Combining_Tree tree(1);
 
   TreeTestHelper::getInstance().runner(&tree,1,1,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME);
  }
-
-TEST(Basics, SequentialTwoNode){
+TEST(Basics, Concurrency2){
   Combining_Tree tree(2);
-  
-  TreeTestHelper::getInstance().runner(&tree,2,1,REPEAT_TIME);
-  EXPECT_EQ(tree.getResult(), REPEAT_TIME);
-}
-
-TEST(Basics, ConcurrencyThreeNodeTwoThread){
-  Combining_Tree tree(3);
-  TreeTestHelper::getInstance().runner(&tree,3,2,REPEAT_TIME);
+  TreeTestHelper::getInstance().runner(&tree,2,2,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*2);
 }
-
-TEST(Basics, ConcurrencyThreeNodeThreeThread){
-  Combining_Tree tree(3);
-  TreeTestHelper::getInstance().runner(&tree,3,3,REPEAT_TIME);
-  EXPECT_EQ(tree.getResult(), REPEAT_TIME*3);
-}
-
-TEST(Basics, ConcurrencyThreeNodeFourThread){
-  Combining_Tree tree(3);
-  TreeTestHelper::getInstance().runner(&tree,3,4,REPEAT_TIME);
+TEST(Basics, Concurrency4){
+  Combining_Tree tree(4);
+  TreeTestHelper::getInstance().runner(&tree,4,4,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*4);
 }
-
-TEST(Basics, ConcurrencySevenNodeEightThread){
-  Combining_Tree tree(7);
-  TreeTestHelper::getInstance().runner(&tree,7,8,REPEAT_TIME);
+TEST(Basics, Concurrency8){
+  Combining_Tree tree(8);
+  TreeTestHelper::getInstance().runner(&tree,8,8,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*8);
 }
+TEST(Basics, Concurrency16) {
+  Combining_Tree tree(16);
+  TreeTestHelper::getInstance().runner(&tree,16,16,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*16);
+}
+/*
+TEST(Basics, Concurrency32){
+  Combining_Tree tree(32);
+  TreeTestHelper::getInstance().runner(&tree,32,32,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*32);
+}
+TEST(Basics, Concurrency64){
+  Combining_Tree tree(64);
+  TreeTestHelper::getInstance().runner(&tree,64,64,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*64);
+}
+*/
+TEST(Basics, Concurrency128){
+  Combining_Tree tree(128);
+  TreeTestHelper::getInstance().runner(&tree,128,128,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*128);
+}
 
-
-TEST(BasicsMega, SequentialOneNode){
+/*
+TEST(BasicsMega, Sequential){
   Combining_Tree tree(1);
   TreeTestHelper::getInstance().runner(&tree,1,1,MEGA_REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), MEGA_REPEAT_TIME);
@@ -241,7 +324,7 @@ TEST(BasicsMega, ConcurrencyThreeNodeTwoThread){
   TreeTestHelper::getInstance().runner(&tree,3,2,MEGA_REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), MEGA_REPEAT_TIME*2);
 }
-/*
+
 TEST(BasicsMega, ConcurrencyThreeNodeThreeThread){
   Combining_Tree tree(3);
   TreeTestHelper::getInstance().runner(&tree,3,3,MEGA_REPEAT_TIME);
@@ -316,7 +399,45 @@ TEST(TimeInterval, ConcurrencySevenNodeEightThread){
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*8);
 }
 */
+/**************** Tests with one read thread ********************/
+/*
+TEST(SingleRead, Sequential) {
+  Combining_Tree tree(1);
+  TreeTestHelper::getInstance().runner3(&tree, 1, 2, REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME);
+}
 
+TEST(SingleRead, SequentialTwoNode){
+  Combining_Tree tree(2);
+  TreeTestHelper::getInstance().runner3(&tree,2,2,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME);
+}
+
+TEST(SingleRead, ConcurrencyThreeNodeTwoThread){
+  Combining_Tree tree(3);
+  TreeTestHelper::getInstance().runner(&tree,3,3,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*2);
+}
+
+TEST(SingleRead, ConcurrencyThreeNodeThreeThread){
+  Combining_Tree tree(3);
+  TreeTestHelper::getInstance().runner(&tree,3,4,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*3);
+}
+
+TEST(Basics, ConcurrencyThreeNodeFourThread){
+  Combining_Tree tree(3);
+  TreeTestHelper::getInstance().runner(&tree,3,5,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*4);
+}
+
+
+TEST(Basics, ConcurrencySevenNodeEightThread){
+  Combining_Tree tree(7);
+  TreeTestHelper::getInstance().runner(&tree,7,8,REPEAT_TIME);
+  EXPECT_EQ(tree.getResult(), REPEAT_TIME*8);
+}
+*/
 } // unnamed namespace
 int main(int argc, char *argv[]) {
   return RUN_TESTS();
