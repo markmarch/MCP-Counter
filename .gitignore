@@ -1,3 +1,5 @@
+*.swp
+build/
 java/.metadata
 java/CombineTree/bin
 
