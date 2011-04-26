@@ -248,7 +248,7 @@ void TreeTestHelper::runner3(Combining_Tree * tree,
     else {
 //      double temp_update_avg = testCombo[i]->update_total / repeat_time;
 //      update_sum += temp_update_avg;
-        update_sum += testCombo[i]->update_total;
+      update_sum += testCombo[i]->update_total;
     }
   }
   // Total update
@@ -350,21 +350,7 @@ TEST(BasicsMega, ConcurrencySevenNodeEightThread){
   EXPECT_EQ(tree.getResult(), MEGA_REPEAT_TIME*8);
 }
 */
-/*
-TEST(Basics, Concurrency50Threads){
-  Combining_Tree tree(50);
 
-  TreeTestHelper::getInstance().runner(&tree,50,50,REPEAT_TIME);
-  EXPECT_EQ(tree.getResult(), REPEAT_TIME * 50);
-}
-
-TEST(Basics, Concurrency100Threads){
-  Combining_Tree tree(100);
-
-  TreeTestHelper::getInstance().runner(&tree,100,100,REPEAT_TIME);
-  EXPECT_EQ(tree.getResult(), REPEAT_TIME * 100);
-}
-*/
 /************** with time interval ***********************/
 /*
 TEST(TimeInterval, SequentialOneNode){
