@@ -12,6 +12,7 @@ const int REPEAT_TIME      = 1000;
 const int MEGA_REPEAT_TIME = 10000000;
 struct TestCombo{
 	int repeat_time;
+  TestCombo(int repeat):repeat_time(repeat_time){}
 };
 
 
@@ -28,11 +29,21 @@ protected:
 	pthread_t            tid_;
 };
 
+
+// a test class for simple test
+class AtomicTester_1 : public AtomicTester{
+public:
+  AtomicTester_1(Atomic_Counter * atomic_counter) : AtomicTester(atomic_counter){}
+	void test(TestCombo * tc_p);  // overwrite the pure vitural function
+};
+
+
+
 class AtomicTestHelper{
 public:
 	void runner(Atomic_Counter * atomic_counter,
-	            TestCombo      * tc_p,
-	            int              thread_num)
+	          	int              thread_num,
+              TestCombo      * tc_p)
 	{
 		AtomicTester_1 ** atomicTester = new AtomicTester_1 * [thread_num];
 		for(int i = 0 ; i < thread_num; i++){
@@ -60,12 +71,6 @@ private:
 	AtomicTestHelper& operator=(AtomicTestHelper&);
 };
 
-// a test class for simple test
-class AtomicTester_1 : public AtomicTester{
-	AtomicTester_1(Atomic_Counter * atomic_counter) : AtomicTester(atomic_counter){}
-	void test(TestCombo * tc_p);  // overwrite the pure vitural function
-};
-
 AtomicTester::AtomicTester(Atomic_Counter * atomic_counter):
   atomic_counter_(atomic_counter){}
 
@@ -75,7 +80,7 @@ void AtomicTester::start(TestCombo * tc_p){
 
 void AtomicTester_1::test(TestCombo * tc_p){
 	for(int i = 0 ; i < tc_p->repeat_time; i++){
-		atomic_counter->getAndIncrement();
+		atomic_counter_->getAndIncrement();
 	}
 }
 

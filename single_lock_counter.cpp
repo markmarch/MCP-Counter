@@ -3,7 +3,7 @@
 
 namespace base{
 
-Single_Lock_Counter():counter_(0){}
+Single_Lock_Counter::Single_Lock_Counter():counter_(0){}
 
 int Single_Lock_Counter::getAndIncrement(){
 	ScopedLock l(&lock_);

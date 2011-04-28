@@ -12,6 +12,7 @@ const int MEGA_REPEAT_TIME = 10000000;
 
 struct TestCombo{
 	int repeat_time;
+  TestCombo(int repeat_time): repeat_time(repeat_time){}
 };
 
 // the abstract class for test
@@ -23,12 +24,13 @@ public:
 	virtual void test(TestCombo * tc_p) = 0;
 protected:
 	Single_Lock_Counter     * counter_;
-	pthread_t            tid_;
+	pthread_t                 tid_;
 };
 
-class SingleLockTester_1 : public SingleLockTest{
-	SingleLockTester_1(Single_Lock_Counter * counter) : SingleLockTester(counter){}
-	void test(TestCombo * tc_p);  // override the virtual function.
+class SingleLockTester_1 : public SingleLockTester{
+public:
+  SingleLockTester_1(Single_Lock_Counter * counter) : SingleLockTester(counter){}
+  void test(TestCombo * tc_p);  // override the virtual function.
 };
 
 SingleLockTester::SingleLockTester(Single_Lock_Counter * counter):
@@ -50,12 +52,13 @@ void SingleLockTester_1::test(TestCombo * tc_p){
 class SingleLockTestHelper{
 public:
 	void runner(Single_Lock_Counter * single_lock_counter,
-	            TestCombo      * tc_p,
-	            int              thread_num)
+	            int                   thread_num,
+              TestCombo           * tc_p
+	            )
 	{
 		SingleLockTester_1 ** singleLockTester = new SingleLockTester_1 * [thread_num];
 		for(int i = 0 ; i < thread_num; i++){
-			singleLockTester[i] = new SingleLockTester_1(atomic_counter);
+			singleLockTester[i] = new SingleLockTester_1(single_lock_counter);
 		}
 		
 		for(int i = 0 ; i < thread_num; i++){
@@ -82,7 +85,7 @@ private:
 TEST(Basics, Sequential){
 	Single_Lock_Counter single_lock_counter;
 	TestCombo tc(REPEAT_TIME);
-	AtomicTestHelper::getInstance().runner(&single_lock_counter,1,&tc);
+  SingleLockTestHelper::getInstance().runner(&single_lock_counter,1,&tc);
 	EXPECT_EQ(single_lock_counter.getResult(),REPEAT_TIME);
 }
 
@@ -90,7 +93,7 @@ TEST(Basics, Sequential){
 TEST(Basics, Concurrency2Thread){
 	Single_Lock_Counter single_lock_counter;
 	TestCombo tc(REPEAT_TIME);
-	AtomicTestHelper::getInstance().runner(&single_lock_counter,2,&tc);
+	SingleLockTestHelper::getInstance().runner(&single_lock_counter,2,&tc);
 	EXPECT_EQ(single_lock_counter.getResult(),REPEAT_TIME*2);
 }
 
@@ -98,7 +101,7 @@ TEST(Basics, Concurrency2Thread){
 TEST(Basics, Concurrency4Thread){
 	Single_Lock_Counter single_lock_counter;
 	TestCombo tc(REPEAT_TIME);
-	AtomicTestHelper::getInstance().runner(&single_lock_counter,4,&tc);
+	SingleLockTestHelper::getInstance().runner(&single_lock_counter,4,&tc);
 	EXPECT_EQ(single_lock_counter.getResult(),REPEAT_TIME*4);
 }
 
