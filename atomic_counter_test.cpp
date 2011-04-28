@@ -12,7 +12,7 @@ const int REPEAT_TIME      = 1000;
 const int MEGA_REPEAT_TIME = 10000000;
 struct TestCombo{
 	int repeat_time;
-  TestCombo(int repeat):repeat_time(repeat_time){}
+  TestCombo(int repeat):repeat_time(repeat){}
 };
 
 
@@ -79,8 +79,10 @@ void AtomicTester::start(TestCombo * tc_p){
 }
 
 void AtomicTester_1::test(TestCombo * tc_p){
-	for(int i = 0 ; i < tc_p->repeat_time; i++){
-		atomic_counter_->getAndIncrement();
+	int counter = 0;
+  for(int i = 0 ; i < tc_p->repeat_time; i++){
+		counter = atomic_counter_->getAndIncrement();
+    // std::cout<<counter<<std::endl;
 	}
 }
 
