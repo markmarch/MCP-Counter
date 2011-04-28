@@ -370,7 +370,7 @@ TEST(Basics, Concurrency128){
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*128);
 }
 
-/*
+
 TEST(BasicsMega, Sequential){
   Combining_Tree tree(1);
   TreeTestHelper::getInstance().runner(&tree,1,1,MEGA_REPEAT_TIME);
@@ -407,7 +407,6 @@ TEST(BasicsMega, ConcurrencySevenNodeEightThread){
   TreeTestHelper::getInstance().runner(&tree,7,8,MEGA_REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), MEGA_REPEAT_TIME*8);
 }
-<<<<<<< HEAD
 
 
 TEST(Basics, Concurrency50Threads){
@@ -424,10 +423,6 @@ TEST(Basics, Concurrency100Threads){
   EXPECT_EQ(tree.getResult(), REPEAT_TIME * 100);
 }
 
-=======
-*/
-
->>>>>>> 78d75ed995a1f35b2246325844f030484486b0b1
 /************** with time interval ***********************/
 
 TEST(TimeInterval, Sequential){
