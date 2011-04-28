@@ -32,6 +32,38 @@ private:
   Mutex& operator=(Mutex&);
 };
 
+class SpinLock{
+public:
+  SpinLock()      { pthread_spin_init(&spinlock_,NULL);}
+  ~SpinLock()     { pthread_spin_destroy(&spinlock_);}
+
+  void lock()     { pthread_spin_lock(&spinlock_);}
+  void unlock()   { pthread_spin_unlock(&spinlock_);}
+
+private:
+  pthread_spinlock_t spinlock_;
+
+  // Non-copyable, non-assignable
+  SpinLock(SpinLock &);
+  SpinLock& operator=(SpinLock&);
+
+};
+
+class ScopedSpinLock{
+public:
+  explicit ScopedSpinLock(SpinLock* spinlock):
+    spinlock_(spinlock){ spinlock_->lock();}
+  ~ScopedSpinLock(){ spinlock_->unlock();}
+
+private:
+  SpinLock* spinlock_;
+
+  // Non-copyable, non-assignable
+  ScopedSpinLock(ScopedSpinLock&);
+  ScopedSpinLock& operator=(ScopedSpinLock&);
+
+};
+
 class ScopedLock {
 public:
   explicit ScopedLock(Mutex* lock) : m_(lock) { m_->lock(); }

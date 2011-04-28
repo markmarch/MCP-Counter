@@ -3,6 +3,7 @@
 
 #include "lock.hpp"
 #include "spinlock.hpp"
+
 namespace base {
 class Node{
 friend   class Combining_Tree;
@@ -18,11 +19,15 @@ public:
   Node(Node * myParent);             // non-root Node
   Node*        getParent();          // get the parent node of this node 
 private:
+  static const int RESULT_READY = 4;
+  static const int OCCUPIED_AND_LOCKED = 3;
+  static const int OCCUPIED_AND_UNLOCKED = 2;
+  static const int UNOCCUPIED_AND_LOCKED = 1; 
+  static const int UNOCCUPIED_AND_UNLOCKED = 0;
 
-  /*static const int pad_size = 128 - ( sizeof(bool) + sizeof(CStatus) + sizeof(int)*3 + sizeof(Node*) + sizeof(ConditionVar) + sizeof(Mutex)); 
-   */
+  static const int LOOP_TIME = 100;
 
-  bool         locked_;              // locked status on this node
+  int          lock_;
   enum         CStatus  cStatus_;    // combining status
   int          firstValue_;          // 1st value to combine
   int          secondValue_;         // 2nd value to combine

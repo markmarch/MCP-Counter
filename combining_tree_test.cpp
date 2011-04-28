@@ -20,7 +20,7 @@ const int MEGA_REPEAT_TIME = 10000000;
 static double getTotal(TicksClock::Ticks start, 
     TicksClock::Ticks end) {
   double duration = end - start;
-  double time = duration / TicksClock::ticksPerMicroSecond();
+  double time = duration * 1e6 / TicksClock::ticksPerSecond();
   return time;
 }
 

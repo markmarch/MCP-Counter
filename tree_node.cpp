@@ -3,45 +3,43 @@
 #include <iostream>
 using namespace base;
 Node::Node():
-  locked_(false),
+  lock_(Node::UNOCCUPIED_AND_UNLOCKED),
   cStatus_(ROOT),
   firstValue_(0),
   secondValue_(0),
   result_(0),
-  parent_(NULL)
-  {
-    //padding_ = new char [pad_size];
-  }
+  parent_(NULL){}
+
 Node::Node(Node * myParent):
-  locked_(false),
+  lock_(Node::UNOCCUPIED_AND_UNLOCKED),
   cStatus_(IDLE),
   firstValue_(0),
   secondValue_(0),
   result_(0),
-  parent_(myParent)
-  {
-    //padding_ = new char [pad_size];
-  }
+  parent_(myParent){}
+
 Node * Node::getParent(){
   return this->parent_;
 }
+
 bool Node::pre_combine(){
-  ScopedLock l(&node_lock_);
-  //std::cout << "pre-combine" << std::endl;
-  //int count  = 0;
-  while(this->locked_) {
-    cond_var_.wait(&node_lock_);
+  while(!(__sync_bool_compare_and_swap(&lock_,UNOCCUPIED_AND_UNLOCKED,
+    OCCUPIED_AND_UNLOCKED))){
+    // spin on local cache before try again
+    for(int i=0;i<LOOP_TIME&&lock_>UNOCCUPIED_AND_UNLOCKED;i++);
   }
+  
   switch(this->cStatus_){
     case IDLE:
       cStatus_ = FIRST;
+      __sync_fetch_and_sub(&lock_,2); // set lock_ to unoccupied&unlocked
       return true;
     case FIRST:
-      //__sync_fetch_and_or(&this->locked_, true);
-      locked_  = true;
       cStatus_ = SECOND;
+      __sync_fetch_and_sub(&lock_,1); // set lock_ to unoccupied&locked
       return false;
     case ROOT:
+      __sync_fetch_and_sub(&lock_,1); // set lock_ to unoccupied&locked
       return false;
     default:
       std::cerr << "error! unexpected Node state i pre-combine" << std::endl;
@@ -50,19 +48,20 @@ bool Node::pre_combine(){
 }
 
 int Node::combine(int combined){
-  ScopedLock l(&node_lock_);
-  //std::cout << "combine" << std::endl;
-  while(this->locked_){
-    cond_var_.wait(&node_lock_);
+  // set lock_ to occupied&locked
+  while(!(__sync_bool_compare_and_swap(&lock_,UNOCCUPIED_AND_UNLOCKED,
+    OCCUPIED_AND_LOCKED))){
+    // spin on local cache before try again
+    for(int i=0;i<LOOP_TIME&&lock_>UNOCCUPIED_AND_UNLOCKED;i++);
   }
   
-  //__sync_fetch_and_or(&this->locked_, true);
   this->firstValue_  = combined;
-  this->locked_  = true;
   switch(this->cStatus_){
     case FIRST:
+      __sync_fetch_and_sub(&lock_,2); // set lock_ to unoccupied&locked
       return  this->firstValue_;
     case SECOND:
+      __sync_fetch_and_sub(&lock_,2); // set lock_ to unoccupied&locked
       return  this->firstValue_ + this->secondValue_;
     default:
       std::cerr << "error! unexpected Node stat in combine " << std::endl;
@@ -71,32 +70,34 @@ int Node::combine(int combined){
 }
 
 int Node::op(int combined){
-  ScopedLock l(&node_lock_);
-  
+  // set lock_ to occupied&locked
+  while(!(__sync_bool_compare_and_swap(&lock_,UNOCCUPIED_AND_LOCKED,
+    OCCUPIED_AND_LOCKED))){
+    // spin on local cache before try again
+    for(int i=0;i<LOOP_TIME&&lock_!=UNOCCUPIED_AND_LOCKED;i++);
+  }
+
   int oldValue;
+  int result;
   switch (this->cStatus_) {
     case ROOT:
       oldValue              = this->result_;
       this->result_        += combined;
+      __sync_fetch_and_sub(&lock_,3); // set lock_ to unoccupied&unlocked
       return oldValue;
     case SECOND:
       this->secondValue_    = combined;
-      // is there really need to be atomic operation?
-      //__sync_fetch_and_and(&this->locked_, false);
-      this->locked_         = false;
-      cond_var_.signalAll();
-      while (this->cStatus_ != RESULT){
-        //std::cout << "wait on op" << std::endl;
-        cond_var_.wait(&node_lock_);
-        //std::cout << "wake on op" << std::endl;
+      __sync_fetch_and_sub(&lock_,3); // set lock_ to unoccupied&unlocked
+      
+      // spin until cStatus changes to RESULT
+      
+      while(!__sync_bool_compare_and_swap(&lock_,RESULT_READY,OCCUPIED_AND_UNLOCKED)){
+        for(int i=0;i<LOOP_TIME&&lock_!=RESULT_READY;i++);
       }
-      locked_               = false;
-      // same operation like before
-      //__sync_fetch_and_and(&this->locked_, false);
-     
-      cond_var_.signalAll();
       this->cStatus_        = IDLE;
-      return this->result_;
+      result  = result_;
+      __sync_fetch_and_sub(&lock_,2); // set lock_ to unoccupied&unlocked
+      return result;
     default:
       std::cerr << "error in op " << std::endl;
       ::exit(1);
@@ -104,24 +105,23 @@ int Node::op(int combined){
 }
 
 void Node::distribute(int prior){
-  ScopedLock l(&node_lock_);
-  
+  while(!__sync_bool_compare_and_swap(&lock_,UNOCCUPIED_AND_LOCKED,OCCUPIED_AND_LOCKED)){
+    for(int i=0;i<LOOP_TIME&&lock_==OCCUPIED_AND_LOCKED;i++);
+  }
   switch (this->cStatus_) {
     case FIRST:
       this->cStatus_        = IDLE;
-      // 
-      //__sync_fetch_and_and(&this->locked_, false);
-      this->locked_         = false;
+      __sync_fetch_and_sub(&lock_,3); // set lock_ to unoccupied and unlocked
       break;
     case SECOND:
       this->result_         = prior + this->firstValue_;
       this->cStatus_        = RESULT;
+      __sync_fetch_and_add(&lock_,1); // set lock_ to result ready
       break;
     default:
       std::cerr << "error in distribute" << std::endl;
       ::exit(1);
   }
-  this->cond_var_.signalAll();
 }
 
 
