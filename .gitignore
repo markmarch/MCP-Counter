@@ -2,4 +2,4 @@
 build/
 java/.metadata
 java/CombineTree/bin
-
+.waf*
