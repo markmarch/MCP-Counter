@@ -20,7 +20,7 @@ const int MEGA_REPEAT_TIME = 10000000;
 static double getTotal(TicksClock::Ticks start, 
     TicksClock::Ticks end) {
   double duration = end - start;
-  double time = duration / TicksClock::ticksPerMicroSecond();
+  double time = duration*1e6 / TicksClock::ticksPerSecond();
   return time;
 }
 
@@ -241,7 +241,7 @@ TEST(BasicsMega, ConcurrencyThreeNodeTwoThread){
   TreeTestHelper::getInstance().runner(&tree,3,2,MEGA_REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), MEGA_REPEAT_TIME*2);
 }
-/*
+
 TEST(BasicsMega, ConcurrencyThreeNodeThreeThread){
   Combining_Tree tree(3);
   TreeTestHelper::getInstance().runner(&tree,3,3,MEGA_REPEAT_TIME);
@@ -260,8 +260,8 @@ TEST(BasicsMega, ConcurrencySevenNodeEightThread){
   TreeTestHelper::getInstance().runner(&tree,7,8,MEGA_REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), MEGA_REPEAT_TIME*8);
 }
-*/
-/*
+
+
 TEST(Basics, Concurrency50Threads){
   Combining_Tree tree(50);
 
@@ -275,7 +275,7 @@ TEST(Basics, Concurrency100Threads){
   TreeTestHelper::getInstance().runner(&tree,100,100,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME * 100);
 }
-*/
+
 /************** with time interval ***********************/
 /*
 TEST(TimeInterval, SequentialOneNode){
