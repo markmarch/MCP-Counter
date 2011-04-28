@@ -25,7 +25,7 @@ private:
   static const int UNOCCUPIED_AND_LOCKED = 1; 
   static const int UNOCCUPIED_AND_UNLOCKED = 0;
 
-  static const int LOOP_TIME = 100;
+  static const int LOOP_TIME = 200;
 
   int          lock_;
   enum         CStatus  cStatus_;    // combining status
