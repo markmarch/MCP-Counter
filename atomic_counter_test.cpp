@@ -49,6 +49,15 @@ public:
 		}
 		delete []atomicTester;
 	}
+	static AtomicTestHelper& getInstance(){
+		static AtomicTestHelper instance;
+		return instance;
+	}
+	
+private:
+	AtomicTestHelper(){}
+	AtomicTestHelper(AtomicTestHelper&);
+	AtomicTestHelper& operator=(AtomicTestHelper&);
 };
 
 // a test class for simple test
