@@ -14,7 +14,7 @@ using base::Combining_Tree;
 using base::TicksClock;
 
 const int REPEAT_TIME = 1000;
-const int MEGA_REPEAT_TIME = 10000000;
+const int MEGA_REPEAT_TIME = 100000;
 
 // calculate total update/read time per-thread
 static double getTotal(TicksClock::Ticks start, 
@@ -424,7 +424,7 @@ TEST(Basics, Concurrency100Threads){
 }
 
 /************** with time interval ***********************/
-
+/*  
 TEST(TimeInterval, Sequential){
   Combining_Tree tree(1);
 
@@ -467,6 +467,7 @@ TEST(TimeInterval, Concurrency128){
   TreeTestHelper::getInstance().runner2(&tree,128,128,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*128);
 }
+*/
 
 /**************** Tests with one read thread ********************/
 /*
