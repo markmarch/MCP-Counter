@@ -11,9 +11,9 @@ namespace{
   using base::Stat_Counter;
   using base::TicksClock;
 
-  const int REPEAT_TIME      = 1000;
-  const int MEGA_REPEAT_TIME = 10000000;
-  const int MAX_THREAD       = 128;
+  const int REPEAT_TIME = 1000; 
+//  const int REPEAT_TIME = 10000000;
+  const int MAX_THREAD  = 128;
 
   static double getTotal(TicksClock::Ticks start,
       TicksClock::Ticks end) {
@@ -53,7 +53,7 @@ namespace{
     pthread_join(tid_, NULL);
   }
 
-  // basic testcase
+  // update testcase
   class StatTester_1 : public StatTester{
     public: 
       StatTester_1(Stat_Counter * stat_counter) : StatTester(stat_counter){ }
@@ -191,7 +191,7 @@ namespace{
     delete []testCombo;
   }
 
-  // multiple read one update
+  // multiple read single update
   void StatTestHelper::runner3(Stat_Counter *stat_counter,
       int              thread_num,
       int              repeat_time)
