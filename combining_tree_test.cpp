@@ -34,7 +34,7 @@ struct TestCombo{
     thread_id(thread_id),
     repeat_time(repeat_time), update_total(0),
     read_total(0) { }
-}__attribute__((aligned(64)));
+};
 
 
 class TreeTester_1{
