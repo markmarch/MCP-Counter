@@ -95,7 +95,7 @@ int Node::op(int combined){
       // spin until cStatus changes to RESULT
       
       while(!__sync_bool_compare_and_swap(&lock_,RESULT_READY,OCCUPIED_AND_UNLOCKED)){
-        for(int i=0;i<LOOP_TIME&&lock_!=RESULT_READY;i++);
+         nanosleep(&SLEEP_TIME,NULL);
       }
       this->cStatus_        = IDLE;
       result  = result_;
