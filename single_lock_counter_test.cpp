@@ -173,6 +173,15 @@ namespace{
     double read_avg = (read_sum / repeat_time) * 1e9;
     std::cout << "average update is: " << update_avg << "ns" << std::endl;
     std::cout << "average read is: " << read_avg << "ns" << std::endl;
+    for(int i = 0; i < thread_num-1; i++) {
+      delete slt_update[i];
+    }
+    for(int i = 0; i < thread_num; i++) {
+      delete testCombo[i];
+    }
+    delete slt_read;
+    delete [] slt_update;
+    delete [] testCombo;
   }
 
   // single update multiple read testcase
@@ -209,6 +218,15 @@ namespace{
     double update_avg = (update_sum / repeat_time) * 1e9;
     std::cout << "average update is: " << update_avg << "ns" << std::endl;
     std::cout << "average read is: " << read_avg << "ns" << std::endl;
+    for(int i = 0; i < thread_num-1; i++) {
+      delete slt_read[i];
+    }
+    for(int i = 0; i < thread_num; i++) {
+      delete testCombo[i];
+    }
+    delete slt_update;
+    delete [] slt_read;
+    delete [] testCombo;
   }
 
   // updates test
