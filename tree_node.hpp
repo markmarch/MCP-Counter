@@ -5,6 +5,8 @@
 #include "spinlock.hpp"
 
 namespace base {
+static const struct timespec SLEEP_TIME={0,1};
+
 class Node{
 friend   class Combining_Tree;
 public:
@@ -26,7 +28,8 @@ private:
   static const int UNOCCUPIED_AND_UNLOCKED = 0;
 
   static const int LOOP_TIME = 200;
-
+  
+  
   int          lock_;
   enum         CStatus  cStatus_;    // combining status
   int          firstValue_;          // 1st value to combine
