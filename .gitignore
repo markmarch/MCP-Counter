@@ -2,5 +2,7 @@
 build/
 java/.metadata
 java/CombineTree/bin
-.waf*
 .lock-wscript
+.waf-*
+profile/
+
