@@ -152,7 +152,7 @@ def build(bld):
     bld.new_task_gen( features      = 'cxx cprogram',
         source        = 'combining_tree_profile.cpp', 
         includes      = '.. .',
-        uselib        = '',
+        uselib        = 'PROFILE',
         uselib_local  = 'combine',
         target        = 'combining_tree_profile',
         unit_test     = 1

@@ -6,7 +6,7 @@ namespace {
 using std::tr1::bind;
 using base::Combining_Tree;
 const int REPEAT_TIME      = 1000;
-const int MEGA_REPEAT_TIME = 10000000;
+const int MEGA_REPEAT_TIME = 1000000;
 
 struct TestCombo{
   int thread_id;
