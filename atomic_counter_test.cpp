@@ -220,7 +220,7 @@ namespace{
     delete [] testCombo;
   }
   // update test
-  /*
+  
   TEST(Basics, Sequential){
     Atomic_Counter atomic_counter;
     AtomicTestHelper::getInstance().runner(&atomic_counter,1,REPEAT_TIME);
@@ -261,9 +261,9 @@ namespace{
     AtomicTestHelper::getInstance().runner(&atomic_counter,128,REPEAT_TIME);
     EXPECT_EQ(atomic_counter.getResult(),REPEAT_TIME*128);
   }
-  */
+  
   // single read multiple updates
-  /*
+  
   TEST(SingleRead, Sequential){
     Atomic_Counter atomic_counter;
     AtomicTestHelper::getInstance().runner2(&atomic_counter,2,REPEAT_TIME);
@@ -304,7 +304,7 @@ namespace{
     AtomicTestHelper::getInstance().runner2(&atomic_counter,129,REPEAT_TIME);
     EXPECT_EQ(atomic_counter.getResult(),REPEAT_TIME*128);
   }
-  */
+  
 // single update multiple reads
 
   TEST(SingleUpdate, Sequential){
