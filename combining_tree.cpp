@@ -1,5 +1,5 @@
 #include "combining_tree.hpp"
-#include <vector>
+#include <list>
 using namespace base;
 /*
 the tree should be complete binary tree
@@ -36,7 +36,7 @@ int Combining_Tree::getResult(){
 }
 
 int Combining_Tree::getAndIncrement(int thread_id){
-  std::vector <Node*> nodes_stack;
+  std::list <Node*> nodes_stack;
   Node * myLeaf      = this->leaf_[thread_id / 2];
   Node * node        = myLeaf;
   
