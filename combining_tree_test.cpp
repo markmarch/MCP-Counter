@@ -13,9 +13,7 @@ using base::makeThread;
 using base::Combining_Tree;
 using base::TicksClock;
 
-//const int REPEAT_TIME = 1000;
-// 1 million
-const int REPEAT_TIME = 1000000;
+const int REPEAT_TIME = 100000;
 //const int MEGA_REPEAT_TIME = 10000000;
 
 // calculate total update/read time per-thread
