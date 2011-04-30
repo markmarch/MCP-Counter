@@ -5,7 +5,7 @@
 #include "spinlock.hpp"
 
 namespace base {
-static const struct timespec SLEEP_TIME={0,1};
+static const struct timespec SLEEP_TIME={0,30};
 
 class Node{
 friend   class Combining_Tree;
