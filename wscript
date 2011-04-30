@@ -149,6 +149,14 @@ def build(bld):
         unit_test     = 1
         )
 
+    bld.new_task_gen( features      = 'cxx cprogram',
+        source        = 'combining_tree_profile.cpp', 
+        includes      = '.. .',
+        uselib        = '',
+        uselib_local  = 'combine',
+        target        = 'combining_tree_profile',
+        unit_test     = 1
+        )
 
 #
 # Build debug variant, if --debug was set
