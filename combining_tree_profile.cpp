@@ -11,7 +11,7 @@ using base::Combining_Tree;
 using base::TicksClock;
 
 const int REPEAT_TIME      = 1000;
-const int MEGA_REPEAT_TIME = 1000000;
+const int MEGA_REPEAT_TIME = 10000;
 
 static double getTotal(TicksClock::Ticks start, 
     TicksClock::Ticks end) {
