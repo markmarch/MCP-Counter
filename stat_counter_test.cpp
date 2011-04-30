@@ -11,8 +11,10 @@ namespace{
   using base::Stat_Counter;
   using base::TicksClock;
 
-  const int REPEAT_TIME = 1000; 
-//  const int REPEAT_TIME = 10000000;
+//  const int REPEAT_TIME = 1000; 
+//  1 million
+  const int REPEAT_TIME = 1000000;
+
   const int MAX_THREAD  = 128;
 
   static double getTotal(TicksClock::Ticks start,
@@ -237,7 +239,7 @@ namespace{
   }
 
   /******************** basic test *************************/
-/*
+
   TEST(Basics, Sequential){
     Stat_Counter stat_counter(MAX_THREAD);
     StatTestHelper::getInstance().runner(&stat_counter,1,REPEAT_TIME);
@@ -278,9 +280,9 @@ namespace{
     StatTestHelper::getInstance().runner(&stat_counter,128,REPEAT_TIME);
     EXPECT_EQ(stat_counter.read_count(),REPEAT_TIME*128);
   }
-*/
+
   /************** single read test ******************/  
-  /*
+  
   TEST(SingleRead, Sequential) {
     Stat_Counter stat_counter(MAX_THREAD);
     StatTestHelper::getInstance().runner2(&stat_counter,2,REPEAT_TIME);
@@ -321,7 +323,7 @@ namespace{
     StatTestHelper::getInstance().runner2(&stat_counter,129,REPEAT_TIME);
     EXPECT_EQ(stat_counter.read_count(),REPEAT_TIME*128);
   }
-*/ 
+
   /******************* single update test **********************/
 
  TEST(SingleUpdate, Sequential) {

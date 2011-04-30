@@ -10,9 +10,10 @@ namespace{
   using base::Atomic_Counter;
   using base::TicksClock;
 
-  const int REPEAT_TIME      = 1000;
-//    const int REPEAT_TIME    = 10000000;
-  const int MEGA_REPEAT_TIME = 10000000;
+//  const int REPEAT_TIME      = 1000;
+//  1 million
+    const int REPEAT_TIME    = 1000000;
+//  const int MEGA_REPEAT_TIME = 10000000;
 
   double getTotal(TicksClock::Ticks start,
       TicksClock::Ticks end) {

@@ -13,8 +13,10 @@ using base::makeThread;
 using base::Combining_Tree;
 using base::TicksClock;
 
-const int REPEAT_TIME = 1000;
-const int MEGA_REPEAT_TIME = 10000000;
+//const int REPEAT_TIME = 1000;
+// 1 million
+const int REPEAT_TIME = 1000000;
+//const int MEGA_REPEAT_TIME = 10000000;
 
 // calculate total update/read time per-thread
 static double getTotal(TicksClock::Ticks start, 
@@ -173,7 +175,7 @@ void TreeTestHelper::runner(Combining_Tree * tree,
 //  std::cout << "update sum is: " << update_sum << std::endl;
 //    double update_avg = (update_sum / thread_num) * 1e9;
   double update_avg = (update_sum / (thread_num * repeat_time)) * 1e9;
-  std::cout << "thread count is: " << thread_num << std::endl;
+//  std::cout << "thread count is: " << thread_num << std::endl;
   std::cout << "average update time: " << update_avg << "ns" << std::endl;
   for(int i = 0; i < thread_num; i++) {
     delete treeTester[i];
@@ -209,9 +211,9 @@ void TreeTestHelper::runner2(Combining_Tree * tree,
       update_sum += testCombo[i]->update_total;
   }
 //  double update_avg = (update_sum / thread_num) * 1e9;
-    std::cout << "update_sum in time interval is: " << update_sum << std::endl;
+//    std::cout << "update_sum in time interval is: " << update_sum << std::endl;
     double update_avg = ((update_sum - repeat_time*thread_num*1e-6) / (repeat_time*thread_num))*1e9;
-  std::cout << "thread count is: " << thread_num << std::endl;
+//  std::cout << "thread count is: " << thread_num << std::endl;
   std::cout << "average update time: " << update_avg << "ns" << std::endl;
   for(int i = 0; i < thread_num; i++) {
     delete treeTester[i];
@@ -262,7 +264,7 @@ void TreeTestHelper::runner3(Combining_Tree * tree,
     double update_avg = (update_sum / (repeat_time*(thread_num-1))) * 1e9;
   // Total read
   double read_avg = (read_sum / repeat_time) * 1e9;
-  std::cout << "thread count is: " << thread_num << std::endl;
+//  std::cout << "thread count is: " << thread_num << std::endl;
   std::cout << "average update time: " << update_avg << "ns" << std::endl;
   std::cout << "average read time: " << read_avg << "ns" << std::endl;
   for(int i = 0; i < thread_num; i++) {
@@ -315,7 +317,7 @@ void TreeTestHelper::runner4(Combining_Tree * tree,
   double update_avg = (update_sum / repeat_time) * 1e9;
   // Total read
   double read_avg = (read_sum / (repeat_time*(thread_num-1))) * 1e9;
-  std::cout << "thread count is: " << thread_num << std::endl;
+//  std::cout << "thread count is: " << thread_num << std::endl;
   std::cout << "average update time: " << update_avg << "ns" << std::endl;
   std::cout << "average read time: " << read_avg << "ns" << std::endl;
   for(int i = 0; i < thread_num; i++) {
@@ -326,7 +328,7 @@ void TreeTestHelper::runner4(Combining_Tree * tree,
   delete [] treeTester;
 }
 /************************ basic tests ***********************/
-/*
+
 TEST(Basics, Sequential){
   Combining_Tree tree(1);
 
@@ -368,7 +370,7 @@ TEST(Basics, Concurrency128){
   TreeTestHelper::getInstance().runner(&tree,128,128,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*128);
 }
-*/
+
 /*
 TEST(BasicsMega, Sequential){
   Combining_Tree tree(1);
@@ -409,7 +411,7 @@ TEST(BasicsMega, ConcurrencySevenNodeEightThread){
 */
 
 /************** with time interval ***********************/
-/*
+
 TEST(TimeInterval, Sequential){
   Combining_Tree tree(1);
 
@@ -452,9 +454,9 @@ TEST(TimeInterval, Concurrency128){
   TreeTestHelper::getInstance().runner2(&tree,128,128,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*128);
 }
-*/
-/**************** Tests with one read thread ********************/
-/*
+
+/**************** single read multiple updates ********************/
+
 TEST(SingleRead, Sequential) {
   Combining_Tree tree(1);
   TreeTestHelper::getInstance().runner3(&tree,1,2,REPEAT_TIME);
@@ -495,8 +497,8 @@ TEST(SingleRead, Concurrency128){
   TreeTestHelper::getInstance().runner3(&tree,128,129,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*128);
 }
-*/
-/*********** multiple read single updates *********************/
+
+/*********** single update multiple reads *********************/
 
 TEST(SingleUpdate, Sequential) {
   Combining_Tree tree(1);
