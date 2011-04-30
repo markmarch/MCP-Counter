@@ -1,12 +1,24 @@
+#include "combining_tree.hpp"
+#include "ticks_clock.hpp"
+
 #include <tr1/functional>
 #include <pthread.h>
-#include "combining_tree.hpp"
 #include <stdlib.h>
+
 namespace {
 using std::tr1::bind;
 using base::Combining_Tree;
+using base::TicksClock;
+
 const int REPEAT_TIME      = 1000;
 const int MEGA_REPEAT_TIME = 1000000;
+
+static double getTotal(TicksClock::Ticks start, 
+    TicksClock::Ticks end) {
+  double duration = end - start;
+  double time = duration / TicksClock::ticksPerSecond();
+  return time;
+}
 
 struct TestCombo{
   int thread_id;
@@ -20,9 +32,14 @@ pthread_t *threads;
 
 void *test(void *thread_id){
   long tid = (long) thread_id;
+  TicksClock::Ticks start = TicksClock::getTicks();
   for(int i = 0 ; i < MEGA_REPEAT_TIME; i++){
     tree->getAndIncrement(tid);
   }
+  TicksClock::Ticks end = TicksClock::getTicks();
+  double duration = getTotal(start,end)*1e9/MEGA_REPEAT_TIME;
+  printf("average:%f\n",duration);
+
   pthread_exit((void*) thread_id);
 }
 }
