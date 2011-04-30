@@ -25,7 +25,7 @@ def configure(conf):
 # Configure libraries
 #
   conf.env.LIB_PTHREAD = [ 'pthread' ]
-  conf.env.LIB_PROFILE = [ '' ]
+  conf.env.LIB_PROFILE = [ 'profiler' ]
   conf.env.LIB_TCMALLOC = [ '' ]
 
 #
@@ -117,7 +117,7 @@ def build(bld):
     bld.new_task_gen( features      = 'cxx cprogram',
         source        = 'combining_tree_test.cpp', 
         includes      = '.. .',
-        uselib        = '',
+        uselib        = 'PROFILE',
         uselib_local  = 'combine',
         target        = 'combining_tree_test',
         unit_test     = 1
@@ -126,7 +126,7 @@ def build(bld):
     bld.new_task_gen( features      = 'cxx cprogram',
         source        = 'stat_counter_test.cpp', 
         includes      = '.. .',
-        uselib        = '',
+        uselib        = 'PROFILE',
         uselib_local  = 'stat_counter',
         target        = 'stat_counter_test',
         unit_test     = 1
@@ -135,7 +135,7 @@ def build(bld):
     bld.new_task_gen( features      = 'cxx cprogram',
         source        = 'single_lock_counter_test.cpp', 
         includes      = '.. .',
-        uselib        = '',
+        uselib        = 'PROFILE',
         uselib_local  = 'single_lock',
         target        = 'single_lock_counter_test',
         unit_test     = 1
@@ -143,7 +143,7 @@ def build(bld):
     bld.new_task_gen( features      = 'cxx cprogram',
         source        = 'atomic_counter_test.cpp', 
         includes      = '.. .',
-        uselib        = '',
+        uselib        = 'PROFILE',
         uselib_local  = 'atomic',
         target        = 'atomic_counter_test',
         unit_test     = 1
