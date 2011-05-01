@@ -4,5 +4,3 @@ java/.metadata
 java/CombineTree/bin
 .lock-wscript
 .waf-*
-profile/
-
