@@ -1,0 +1,64 @@
+Running Basics(Sequential): average update is: 13.5232
+PASSED
+Running Basics(Concurrency2): average update is: 43.1502
+PASSED
+Running Basics(Concurrency4): average update is: 108.946
+PASSED
+Running Basics(Concurrency8): average update is: 139.801
+PASSED
+Running Basics(Concurrency16): average update is: 139.762
+PASSED
+Running Basics(Concurrency32): average update is: 144.656
+PASSED
+Running Basics(Concurrency64): average update is: 222.162
+PASSED
+Running Basics(Concurrency128): average update is: 248.235
+PASSED
+Running SingleRead(Sequential): average update is: 13.5136
+average read is: 3.09284
+PASSED
+Running SingleRead(Concurrency2): average update is: 59.4529
+average read is: 13.7219
+PASSED
+Running SingleRead(Concurrency4): average update is: 107.272
+average read is: 16.3601
+PASSED
+Running SingleRead(Concurrency8): average update is: 130.319
+average read is: 12.4225
+PASSED
+Running SingleRead(Concurrency16): average update is: 217.29
+average read is: 15.7264
+PASSED
+Running SingleRead(Concurrency32): average update is: 188.741
+average read is: 16.0154
+PASSED
+Running SingleRead(Concurrency64): average update is: 204.566
+average read is: 27.1855
+PASSED
+Running SingleRead(Concurrency128): average update is: 197.839
+average read is: 16.0059
+PASSED
+Running SingleUpdate(Sequential): average update is: 18.967ns
+average read is: 11.3189ns
+PASSED
+Running SingleUpdate(Concurrency2): average update is: 31.0133ns
+average read is: 10.9213ns
+PASSED
+Running SingleUpdate(Concurrency4): average update is: 27.4636ns
+average read is: 8.4742ns
+PASSED
+Running SingleUpdate(Concurrency8): average update is: 30.3637ns
+average read is: 7.44308ns
+PASSED
+Running SingleUpdate(Concurrency16): average update is: 61.909ns
+average read is: 9.08544ns
+PASSED
+Running SingleUpdate(Concurrency32): average update is: 112.835ns
+average read is: 7.3688ns
+PASSED
+Running SingleUpdate(Concurrency64): average update is: 31.9136ns
+average read is: 3.73993ns
+PASSED
+Running SingleUpdate(Concurrency128): average update is: 52.9661ns
+average read is: 3.5636ns
+PASSED

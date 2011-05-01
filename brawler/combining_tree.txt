@@ -1,0 +1,64 @@
+Running Basics(Sequential): average update time: 44.7979ns
+PASSED
+Running Basics(Concurrency2): average update time: 302.459ns
+PASSED
+Running Basics(Concurrency4): average update time: 885.602ns
+PASSED
+Running Basics(Concurrency8): average update time: 3937.41ns
+PASSED
+Running Basics(Concurrency16): average update time: 10828.7ns
+PASSED
+Running Basics(Concurrency32): average update time: 31757.6ns
+PASSED
+Running Basics(Concurrency64): average update time: 86573.2ns
+PASSED
+Running Basics(Concurrency128): average update time: 213785ns
+PASSED
+Running SingleRead(Sequential): average update time: 56.9433ns
+average read time: 14.9311ns
+PASSED
+Running SingleRead(Concurrency2): average update time: 367.557ns
+average read time: 10.4464ns
+PASSED
+Running SingleRead(Concurrency4): average update time: 1040.19ns
+average read time: 10.3539ns
+PASSED
+Running SingleRead(Concurrency8): average update time: 3941.28ns
+average read time: 4.23759ns
+PASSED
+Running SingleRead(Concurrency16): average update time: 11341.5ns
+average read time: 4.25923ns
+PASSED
+Running SingleRead(Concurrency32): average update time: 30903.9ns
+average read time: 7.0744ns
+PASSED
+Running SingleRead(Concurrency64): average update time: 84883.7ns
+average read time: 4.60965ns
+PASSED
+Running SingleRead(Concurrency128): average update time: 216319ns
+average read time: 4.23677ns
+PASSED
+Running SingleUpdate(Sequential): average update time: 55.4273ns
+average read time: 10.3806ns
+PASSED
+Running SingleUpdate(Concurrent2): average update time: 60.9954ns
+average read time: 11.3581ns
+PASSED
+Running SingleUpdate(Concurrent4): average update time: 82.5647ns
+average read time: 15.8099ns
+PASSED
+Running SingleUpdate(Concurrent8): average update time: 81.4458ns
+average read time: 11.8975ns
+PASSED
+Running SingleUpdate(Concurrent16): average update time: 148.398ns
+average read time: 12.6833ns
+PASSED
+Running SingleUpdate(Concurrent32): average update time: 304.808ns
+average read time: 28.506ns
+PASSED
+Running SingleUpdate(Concurrent64): average update time: 511.285ns
+average read time: 28.9669ns
+PASSED
+Running SingleUpdate(Concurrent128): average update time: 777.142ns
+average read time: 20.1448ns
+PASSED
