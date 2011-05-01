@@ -12,7 +12,7 @@ namespace{
 
 //  const int REPEAT_TIME      = 1000;
 //  1 million
-    const int REPEAT_TIME    = 1000000;
+    const int REPEAT_TIME    = 100000;
 //  const int MEGA_REPEAT_TIME = 10000000;
 
   double getTotal(TicksClock::Ticks start,
