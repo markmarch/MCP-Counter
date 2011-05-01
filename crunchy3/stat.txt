@@ -1,0 +1,64 @@
+Running Basics(Sequential): average update time: 3.13329
+PASSED
+Running Basics(Concurency2): average update time: 3.12366
+PASSED
+Running Basics(Concurency4): average update time: 3.05019
+PASSED
+Running Basics(Concurency8): average update time: 3.48142
+PASSED
+Running Basics(Concurency16): average update time: 3.75437
+PASSED
+Running Basics(Concurency32): average update time: 3.52249
+PASSED
+Running Basics(Concurency64): average update time: 3.51309
+PASSED
+Running Basics(Concurency128): average update time: 3.62988
+PASSED
+Running SingleRead(Sequential): average update is: 2.97318ns
+average read is: 300.947ns
+PASSED
+Running SingleRead(concurrency2): average update is: 4.75112ns
+average read is: 307.043ns
+PASSED
+Running SingleRead(concurrency4): average update is: 4.33374ns
+average read is: 318.422ns
+PASSED
+Running SingleRead(concurrency8): average update is: 5.80538ns
+average read is: 318.049ns
+PASSED
+Running SingleRead(concurrency16): average update is: 4.26ns
+average read is: 312.049ns
+PASSED
+Running SingleRead(concurrency32): average update is: 4.2865ns
+average read is: 315.26ns
+PASSED
+Running SingleRead(concurrency64): average update is: 3.94134ns
+average read is: 325.166ns
+PASSED
+Running SingleRead(concurrency128): average update is: 4.25632ns
+average read is: 336.281ns
+PASSED
+Running SingleUpdate(Sequential): average update: 5.45179ns
+average read: 303.459ns
+PASSED
+Running SingleUpdate(concurrency2): average update: 5.3264ns
+average read: 604.464ns
+PASSED
+Running SingleUpdate(concurrency4): average update: 6.08146ns
+average read: 827.725ns
+PASSED
+Running SingleUpdate(concurrency8): average update: 6.88307ns
+average read: 1584.63ns
+PASSED
+Running SingleUpdate(concurrency16): average update: 5.91661ns
+average read: 2375.28ns
+PASSED
+Running SingleUpdate(concurrency32): average update: 5.92131ns
+average read: 8573.36ns
+PASSED
+Running SingleUpdate(concurrency64): average update: 6.06794ns
+average read: 23307ns
+PASSED
+Running SingleUpdate(concurrency128): average update: 6.67553ns
+average read: 97427.5ns
+PASSED

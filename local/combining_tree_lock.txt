@@ -1,0 +1,64 @@
+Running Basics(Sequential): average update time: 83.4461ns
+PASSED
+Running Basics(Concurrency2): average update time: 1076.72ns
+PASSED
+Running Basics(Concurrency4): average update time: 1440.18ns
+PASSED
+Running Basics(Concurrency8): average update time: 2933.81ns
+PASSED
+Running Basics(Concurrency16): average update time: 6306.53ns
+PASSED
+Running Basics(Concurrency32): average update time: 14865ns
+PASSED
+Running Basics(Concurrency64): average update time: 33855.6ns
+PASSED
+Running Basics(Concurrency128): average update time: 86333ns
+PASSED
+Running SingleRead(Sequential): average update time: 66.822ns
+average read time: 4.42258ns
+PASSED
+Running SingleRead(Concurrency2): average update time: 1129.33ns
+average read time: 4.26738ns
+PASSED
+Running SingleRead(Concurrency4): average update time: 1358.83ns
+average read time: 6.09903ns
+PASSED
+Running SingleRead(Concurrency8): average update time: 2516.5ns
+average read time: 3.79841ns
+PASSED
+Running SingleRead(Concurrency16): average update time: 5538.64ns
+average read time: 5.21108ns
+PASSED
+Running SingleRead(Concurrency32): average update time: 13673.3ns
+average read time: 4.02777ns
+PASSED
+Running SingleRead(Concurrency64): average update time: 35813.5ns
+average read time: 4.95501ns
+PASSED
+Running SingleRead(Concurrency128): average update time: 82941ns
+average read time: 4.93164ns
+PASSED
+Running SingleUpdate(Sequential): average update time: 56.6338ns
+average read time: 4.8786ns
+PASSED
+Running SingleUpdate(Concurrent2): average update time: 64.9336ns
+average read time: 3.36555ns
+PASSED
+Running SingleUpdate(Concurrent4): average update time: 73.6832ns
+average read time: 4.37919ns
+PASSED
+Running SingleUpdate(Concurrent8): average update time: 80.3599ns
+average read time: 4.21204ns
+PASSED
+Running SingleUpdate(Concurrent16): average update time: 84.3631ns
+average read time: 3.68162ns
+PASSED
+Running SingleUpdate(Concurrent32): average update time: 65.4185ns
+average read time: 4.29186ns
+PASSED
+Running SingleUpdate(Concurrent64): average update time: 85.3967ns
+average read time: 3.38731ns
+PASSED
+Running SingleUpdate(Concurrent128): average update time: 75.245ns
+average read time: 3.53285ns
+PASSED

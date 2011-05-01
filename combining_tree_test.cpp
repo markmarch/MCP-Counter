@@ -409,7 +409,7 @@ TEST(BasicsMega, ConcurrencySevenNodeEightThread){
 */
 
 /************** with time interval ***********************/
-
+/*  
 TEST(TimeInterval, Sequential){
   Combining_Tree tree(1);
 
@@ -452,7 +452,7 @@ TEST(TimeInterval, Concurrency128){
   TreeTestHelper::getInstance().runner2(&tree,128,128,REPEAT_TIME);
   EXPECT_EQ(tree.getResult(), REPEAT_TIME*128);
 }
-
+*/
 /**************** single read multiple updates ********************/
 
 TEST(SingleRead, Sequential) {
