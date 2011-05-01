@@ -28,7 +28,7 @@ bool Node::pre_combine(){
     OCCUPIED_AND_UNLOCKED))){
     // spin on local cache before try again
     // for(int i=0;i<LOOP_TIME&&lock_!=UNOCCUPIED_AND_UNLOCKED;i++);
-    nanosleep(&SLEEP_TIME,NULL);
+    // nanosleep(&SLEEP_TIME,NULL);
   }
   // printf("%d ",k);
   
@@ -56,7 +56,7 @@ int Node::combine(int combined){
     OCCUPIED_AND_LOCKED))){
     // spin on local cache before try again
     // for(int i=0;i<LOOP_TIME&&lock_>UNOCCUPIED_AND_UNLOCKED;i++);
-    nanosleep(&SLEEP_TIME,NULL);
+    // nanosleep(&SLEEP_TIME,NULL);
   }
   
   this->firstValue_  = combined;
@@ -79,7 +79,7 @@ int Node::op(int combined){
     OCCUPIED_AND_LOCKED))){
     // spin on local cache before try again
     // for(int i=0;i<LOOP_TIME&&lock_!=UNOCCUPIED_AND_LOCKED;i++);
-    nanosleep(&SLEEP_TIME,NULL);
+    // nanosleep(&SLEEP_TIME,NULL);
   }
 
   int oldValue;
@@ -98,7 +98,7 @@ int Node::op(int combined){
       
       while(!__sync_bool_compare_and_swap(&lock_,RESULT_READY,OCCUPIED_AND_UNLOCKED)){
          // for(int i=0;i<LOOP_TIME&&lock_!=RESULT_READY;i++);
-         nanosleep(&SLEEP_TIME,NULL);
+         // nanosleep(&SLEEP_TIME,NULL);
       }
       this->cStatus_        = IDLE;
       result  = result_;
@@ -113,7 +113,7 @@ int Node::op(int combined){
 void Node::distribute(int prior){
   while(!__sync_bool_compare_and_swap(&lock_,UNOCCUPIED_AND_LOCKED,OCCUPIED_AND_LOCKED)){
     // for(int i=0;i<LOOP_TIME&&lock_==OCCUPIED_AND_LOCKED;i++);
-    nanosleep(&SLEEP_TIME,NULL);
+    // nanosleep(&SLEEP_TIME,NULL);
   }
   switch (this->cStatus_) {
     case FIRST:
